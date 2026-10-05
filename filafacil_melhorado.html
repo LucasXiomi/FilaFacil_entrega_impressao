@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102347">
+  <title>FilaFácil</title>
+  <style>
+    :root {
+      --navy: #102347;
+      --blue: #2563eb;
+      --ink: #172b4d;
+      --muted: #71809b;
+      --line: #e4eaf3;
+      --bg: #f4f7fc;
+      --green: #159b69;
+      --yellow: #d99100;
+      --red: #e83b4f;
+      --shadow: 0 10px 30px #142a520a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+      min-height: 100vh;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    /* ========== LAYOUT ATENDENTE ========== */
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 245px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #102347, #0d1b36);
+      color: #eaf0ff;
+      padding: 26px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 9px;
+    }
+
+    .logo {
+      width: 43px;
+      height: 43px;
+      border-radius: 13px;
+      background: linear-gradient(145deg, #60a5fa, #2563eb);
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      font-weight: 900;
+      color: white;
+    }
+
+    .brand h1 { font-size: 19px; margin: 0; }
+    .brand p {
+      font-size: 10px;
+      color: #a9bad9;
+      margin: 4px 0 0;
+      letter-spacing: 1px;
+    }
+
+    .nav { display: grid; gap: 7px; }
+
+    .nav button {
+      display: flex;
+      gap: 13px;
+      align-items: center;
+      border: 0;
+      border-radius: 11px;
+      background: transparent;
+      color: #c5d2eb;
+      padding: 14px;
+      text-align: left;
+      transition: background .15s;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: #244d9b;
+      color: white;
+    }
+
+    .nav span {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .guiche-selector {
+      background: #0d1f3a;
+      border: 1px solid #24466e;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .guiche-selector label {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #9db5d5;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .guiche-selector select {
+      width: 100%;
+      background: #102b4d;
+      border: 1px solid #2a4d78;
+      color: white;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .side-links {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .side-links a {
+      color: #9db5d5;
+      font-size: 12px;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #0d1f3a;
+      border: 1px solid #1e3a5f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: .15s;
+    }
+
+    .side-links a:hover {
+      background: #163056;
+      color: white;
+    }
+
+    .side-bottom {
+      margin-top: auto;
+      padding: 10px;
+      color: #bdcbe3;
+      font-size: 12px;
+    }
+
+    .online {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #32d296;
+    }
+
+    main { min-width: 0; }
+
+    .topbar {
+      height: 72px;
+      background: #ffffffeb;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .avatar {
+      display: inline-grid;
+      place-items: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #e6edfa;
+      color: #31528c;
+      font-weight: 800;
+      margin-right: 9px;
+    }
+
+    .content {
+      padding: 30px 32px;
+      max-width: 1600px;
+      margin: auto;
+    }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 7px;
+    }
+
+    h2 {
+      font-size: clamp(25px, 3vw, 33px);
+      letter-spacing: -.8px;
+      margin: 0;
+      color: #12264a;
+    }
+
+    .subtitle {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: .2s;
+    }
+
+    .primary {
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 7px 15px #2563eb25;
+    }
+
+    .primary:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .soft { background: #edf3ff; color: #2454aa; }
+    .danger { background: #ffe8ec; color: #ce2d42; }
+    .success { background: #e2f7ee; color: #087f51; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .stat, .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .stat {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .stat-icon {
+      width: 47px;
+      height: 47px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 21px;
+      flex-shrink: 0;
+    }
+
+    .blue { background: #eaf1ff; color: var(--blue); }
+    .green { background: #e2f7ee; color: var(--green); }
+    .purple { background: #f0eaff; color: #7c3aed; }
+    .red { background: #ffe8ec; color: var(--red); }
+
+    .num { font-size: 27px; font-weight: 850; line-height: 1; }
+    .label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(290px, .9fr);
+      gap: 21px;
+      align-items: start;
+    }
+
+    .card { overflow: hidden; }
+
+    .card-head {
+      padding: 19px 21px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3 { font-size: 16px; margin: 0; font-weight: 800; }
+
+    .pill {
+      background: #edf3ff;
+      color: #2454aa;
+      padding: 5px 9px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .tools {
+      display: flex;
+      gap: 9px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      flex-wrap: wrap;
+    }
+
+    .tools input { flex: 1; min-width: 140px; }
+
+    .tools input,
+    .tools select,
+    .field select {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 10px 11px;
+      background: #fbfcff;
+      color: var(--ink);
+      outline: none;
+      font-size: 12px;
+    }
+
+    .tools input:focus,
+    .field select:focus {
+      border-color: #8bb0ff;
+      box-shadow: 0 0 0 3px #2563eb18;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #f8faff;
+      color: #7a89a4;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      padding: 13px 15px;
+      white-space: nowrap;
+    }
+
+    td {
+      font-size: 12px;
+      padding: 15px;
+      border-top: 1px solid #edf1f7;
+      white-space: nowrap;
+    }
+
+    tbody tr:hover { background: #fbfcff; }
+
+    .pos {
+      display: inline-grid;
+      place-items: center;
+      width: 29px;
+      height: 29px;
+      border-radius: 10px;
+      font-weight: 800;
+    }
+
+    .pos.alta { background: #ffe8ec; color: #ce2d42; }
+    .pos.media { background: #fff3d2; color: #a66b00; }
+    .pos.baixa { background: #e2f7ee; color: #087f51; }
+
+    .id { color: #244a8f; font-weight: 800; font-size: 15px; }
+
+    .priority {
+      display: inline-block;
+      border-radius: 30px;
+      padding: 5px 9px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .priority.alta { background: #ffe8ec; color: #ce2d42; }
+    .priority.media { background: #fff3d2; color: #a66b00; }
+    .priority.baixa { background: #e2f7ee; color: #087f51; }
+
+    .status { font-size: 11px; color: #71809b; }
+    .status.atendimento { color: var(--blue); font-weight: 700; }
+    .status.resolvido { color: var(--green); }
+    .status.cancelado { color: var(--red); }
+
+    .guiche-badge {
+      display: inline-block;
+      background: #eaf1ff;
+      color: #1d4ed8;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    .row-action {
+      border: 0;
+      background: #edf3ff;
+      color: #2454aa;
+      border-radius: 7px;
+      padding: 7px 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .row-action.danger { background: #ffe8ec; color: #ce2d42; }
+    .row-action.success { background: #e2f7ee; color: #087f51; }
+
+    .empty {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .right { display: grid; gap: 20px; }
+    .inner { padding: 18px; }
+
+    .next {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+      border: 1px solid #ffd5dc;
+      background: linear-gradient(120deg, #fff2f4, #fff9fa);
+      border-radius: 12px;
+    }
+
+    .next-num {
+      width: 52px;
+      height: 52px;
+      border-radius: 13px;
+      background: var(--red);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .next-info { flex: 1; min-width: 0; }
+    .next-info strong { font-size: 14px; }
+    .next-info p {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 5px 0 0;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .actions button { padding: 11px 8px; font-size: 11px; }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+
+    .field label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #334867;
+    }
+
+    .form-body { padding: 19px; }
+    .form-body > .btn { width: 100%; }
+
+    .note {
+      font-size: 10px;
+      line-height: 1.5;
+      color: #8794aa;
+      margin: 12px 0 0;
+    }
+
+    .footer {
+      text-align: center;
+      color: #9aa7bc;
+      font-size: 10px;
+      padding: 22px 0 0;
+    }
+
+    .toast {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      background: #142b4f;
+      color: white;
+      padding: 13px 17px;
+      border-radius: 11px;
+      box-shadow: 0 10px 35px #0003;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: .2s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .mobile { display: none; }
+
+    .sound-settings {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8faff;
+    }
+
+    .sound-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #334867;
+      margin: 7px 0;
+    }
+
+    .sound-option input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--blue);
+    }
+
+    #soundVolume {
+      width: 100%;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    #testSound { background: #fff4d6; color: #875700; }
+    #repeatCall { background: #e8f8f0; color: #087f51; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #60a5fa;
+      outline-offset: 2px;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+    .view-workspace { display: none; }
+    .view-workspace.active { display: grid; }
+
+    /* Mini telão no painel */
+    .screen-panel {
+      background: #07172c;
+      color: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(220px, .8fr);
+      gap: 20px;
+      align-items: center;
+    }
+
+    .screen-label {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #9db5d5;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .screen-current {
+      margin-top: 10px;
+      background: #102b4d;
+      border: 1px solid #24466e;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .screen-number {
+      font-size: clamp(48px, 7vw, 80px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 5px;
+      color: #53b7ff;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .screen-guiche {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #7dd3fc;
+      font-weight: 700;
+    }
+
+    .screen-upcoming {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .screen-upcoming-item {
+      background: #122642;
+      border: 1px solid #24415f;
+      border-radius: 10px;
+      padding: 12px 5px;
+      text-align: center;
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 850;
+      color: #fff;
+    }
+
+    .screen-empty {
+      color: #9db5d5;
+      font-size: 13px;
+      padding: 12px 0;
+    }
+
+    .screen-panel .screen-muted {
+      color: #9db5d5;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .screen-current.called {
+      animation: callPulse 1.1s ease-in-out 2;
+      border-color: #53b7ff;
+      box-shadow: 0 0 0 3px #53b7ff30;
+    }
+
+    .screen-number.called-number {
+      color: #fff;
+      text-shadow: 0 0 22px #39aaff;
+    }
+
+    @keyframes callPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.012); background: #17385f; }
+    }
+
+    /* ========== TELÃO FULLSCREEN ========== */
+    body.mode-telao {
+      background: #030b16;
+      overflow: hidden;
+    }
+
+    .telao {
+      display: none;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at center, #0a1a30 0%, #030b16 70%);
+      color: white;
+      padding: 40px 60px;
+      flex-direction: column;
+    }
+
+    body.mode-telao .telao { display: flex; }
+    body.mode-telao .app { display: none; }
+    body.mode-telao .kiosk { display: none; }
+
+    .telao-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .telao-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .telao-brand .logo {
+      width: 56px;
+      height: 56px;
+      font-size: 28px;
+    }
+
+    .telao-brand h1 {
+      font-size: 28px;
+      font-weight: 800;
+    }
+
+    .telao-brand p {
+      font-size: 13px;
+      color: #6b8ab0;
+      letter-spacing: 2px;
+    }
+
+    .telao-clock {
+      font-size: 22px;
+      font-weight: 600;
+      color: #8ba4c4;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .telao-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .telao-current {
+      background: linear-gradient(145deg, #0d2138, #0a1929);
+      border: 2px solid #1e3a5f;
+      border-radius: 28px;
+      padding: 50px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .telao-current::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, #2563eb22, transparent 60%);
+      pointer-events: none;
+    }
+
+    .telao-label {
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: #6b8ab0;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .telao-number {
+      font-size: clamp(100px, 16vw, 180px);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 8px;
+      color: #53b7ff;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 60px #2563eb55;
+    }
+
+    .telao-guiche {
+      margin-top: 24px;
+      font-size: 36px;
+      font-weight: 800;
+      color: #7dd3fc;
+      letter-spacing: 2px;
+    }
+
+    .telao-status {
+      margin-top: 12px;
+      font-size: 16px;
+      color: #6b8ab0;
+    }
+
+    .telao-current.called {
+      animation: telaoPulse 1.2s ease-in-out 3;
+      border-color: #53b7ff;
+      box-shadow: 0 0 0 4px #53b7ff30, 0 0 80px #2563eb33;
+    }
+
+    .telao-number.called-number {
+      color: #fff;
+      text-shadow: 0 0 40px #39aaff, 0 0 80px #2563eb;
+    }
+
+    @keyframes telaoPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.015); background: linear-gradient(145deg, #122a48, #0d2138); }
+    }
+
+    .telao-side {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .telao-box {
+      background: #0a1929;
+      border: 1px solid #1e3a5f;
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .telao-box h3 {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: #6b8ab0;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .telao-next-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .telao-next-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d2138;
+      border: 1px solid #1e3a5f;
+      border-radius: 12px;
+      padding: 16px 20px;
+    }
+
+    .telao-next-num {
+      font-size: 32px;
+      font-weight: 900;
+      color: white;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .telao-next-pri {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .telao-next-pri.alta { background: #3b1218; color: #f87171; }
+    .telao-next-pri.media { background: #3b2e0a; color: #fbbf24; }
+    .telao-next-pri.baixa { background: #0a2e1c; color: #34d399; }
+
+    .telao-empty {
+      color: #4a6a8a;
+      font-size: 16px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .telao-footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #3a5a7a;
+      font-size: 13px;
+    }
+
+    /* ========== KIOSK ========== */
+    body.mode-kiosk {
+      background: linear-gradient(160deg, #0c1a32, #102347 50%, #0a1628);
+      overflow: hidden;
+    }
+
+    .kiosk {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      color: white;
+      text-align: center;
+    }
+
+    body.mode-kiosk .kiosk { display: flex; }
+    body.mode-kiosk .app { display: none; }
+    body.mode-kiosk .telao { display: none; }
+
+    .kiosk-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .kiosk-brand .logo {
+      width: 60px;
+      height: 60px;
+      font-size: 30px;
+    }
+
+    .kiosk-brand h1 {
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .kiosk-brand p {
+      font-size: 14px;
+      color: #8ba4c4;
+      letter-spacing: 2px;
+    }
+
+    .kiosk-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 28px;
+      padding: 48px 40px;
+      max-width: 520px;
+      width: 100%;
+      backdrop-filter: blur(12px);
+    }
+
+    .kiosk-card h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: white;
+    }
+
+    .kiosk-card .sub {
+      color: #8ba4c4;
+      font-size: 15px;
+      margin-bottom: 36px;
+    }
+
+    .kiosk-priorities {
+      display: grid;
+      gap: 14px;
+    }
+
+    .kiosk-pri-btn {
+      border: 2px solid transparent;
+      border-radius: 16px;
+      padding: 22px 24px;
+      font-size: 18px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: .2s;
+      color: white;
+    }
+
+    .kiosk-pri-btn.alta {
+      background: linear-gradient(135deg, #7f1d1d, #991b1b);
+      border-color: #f87171;
+    }
+
+    .kiosk-pri-btn.media {
+      background: linear-gradient(135deg, #1e3a5f, #2563eb);
+      border-color: #60a5fa;
+    }
+
+    .kiosk-pri-btn.baixa {
+      background: linear-gradient(135deg, #064e3b, #059669);
+      border-color: #34d399;
+    }
+
+    .kiosk-pri-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 12px 40px #0005;
+    }
+
+    .kiosk-pri-btn span.hint {
+      font-size: 13px;
+      font-weight: 600;
+      opacity: .7;
+    }
+
+    .kiosk-result {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .kiosk-result.show { display: flex; }
+
+    .kiosk-result-label {
+      font-size: 14px;
+      letter-spacing: 2px;
+      color: #8ba4c4;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .kiosk-result-num {
+      font-size: clamp(72px, 18vw, 120px);
+      font-weight: 900;
+      color: #53b7ff;
+      letter-spacing: 6px;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 40px #2563eb66;
+      line-height: 1;
+    }
+
+    .kiosk-result-pri {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 4px;
+      padding: 6px 14px;
+      border-radius: 20px;
+    }
+
+    .kiosk-result-pri.alta { background: #3b1218; color: #f87171; }
+    .kiosk-result-pri.media { background: #1e3a5f; color: #60a5fa; }
+    .kiosk-result-pri.baixa { background: #0a2e1c; color: #34d399; }
+
+    .kiosk-result-msg {
+      font-size: 15px;
+      color: #6b8ab0;
+      margin-top: 8px;
+    }
+
+    .kiosk-again {
+      margin-top: 28px;
+      background: transparent;
+      border: 2px solid #2a4d78;
+      color: #8ba4c4;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .kiosk-again:hover {
+      border-color: #53b7ff;
+      color: white;
+    }
+
+    .kiosk-footer {
+      margin-top: 40px;
+      color: #3a5a7a;
+      font-size: 13px;
+    }
+
+
+    .priority.preferencial, .pos.preferencial, .telao-next-pri.preferencial,
+    .kiosk-result-pri.preferencial { background: #ffe8ec; color: #ce2d42; }
+    .priority.comum, .pos.comum, .telao-next-pri.comum,
+    .kiosk-result-pri.comum { background: #eaf1ff; color: #2454aa; }
+    .priority.atacado, .pos.atacado, .telao-next-pri.atacado,
+    .kiosk-result-pri.atacado { background: #e2f7ee; color: #087f51; }
+    .kiosk-pri-btn.preferencial { background: linear-gradient(135deg, #7f1d1d, #991b1b); border-color: #f87171; }
+    .kiosk-pri-btn.comum { background: linear-gradient(135deg, #1e3a5f, #2563eb); border-color: #60a5fa; }
+    .kiosk-pri-btn.atacado { background: linear-gradient(135deg, #064e3b, #059669); border-color: #34d399; }
+
+    /* Responsive */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 210px minmax(0, 1fr); }
+      .content { padding: 24px 20px; }
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .workspace { grid-template-columns: 1fr; }
+      .right { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .telao-main { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .app { display: block; }
+
+      .sidebar {
+        position: fixed;
+        z-index: 10;
+        inset: 0 auto 0 0;
+        width: 255px;
+        transform: translateX(-105%);
+        transition: .25s;
+        box-shadow: 15px 0 45px #0003;
+      }
+
+      .sidebar.open { transform: translateX(0); }
+
+      .topbar { height: 60px; padding: 0 15px; }
+
+      .mobile {
+        display: inline-block;
+        border: 0;
+        background: none;
+        font-size: 21px;
+        color: var(--ink);
+        margin-right: 9px;
+      }
+
+      .content { padding: 22px 13px; }
+      .heading { align-items: flex-start; }
+      .heading .btn { font-size: 0; padding: 12px; }
+      .heading .btn span { font-size: 20px; }
+      .stats { gap: 9px; }
+      .stat { padding: 12px; display: block; }
+      .stat-icon { width: 38px; height: 38px; margin-bottom: 10px; }
+      .num { font-size: 23px; }
+      .label { font-size: 10px; }
+      .right { grid-template-columns: 1fr; }
+      .card-head { padding: 16px; }
+      .tools { padding: 11px; }
+      .tools select { max-width: 105px; }
+      th, td { padding: 12px; }
+      .role { display: none; }
+      .screen-panel { grid-template-columns: 1fr; padding: 16px; }
+      .screen-number { font-size: 52px; }
+
+      .telao { padding: 24px 16px; }
+      .telao-number { font-size: 80px; letter-spacing: 4px; }
+      .telao-guiche { font-size: 24px; }
+
+      .kiosk-card { padding: 32px 20px; }
+      .kiosk-pri-btn { font-size: 16px; padding: 18px; }
+    }
+
+    /* ========== IMPRESSAO ELGIN TM-20 ========== */
+    .printer-card {
+      margin-top: 14px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f8faff;
+    }
+
+    .printer-status {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 12px;
+      color: #334867;
+      font-weight: 700;
+    }
+
+    .printer-status .printer-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #159b69;
+      box-shadow: 0 0 0 4px #159b6920;
+    }
+
+    .printer-info {
+      margin-top: 7px;
+      color: #8794aa;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .print-btn {
+      border: 0;
+      background: #edf3ff;
+      color: #2454aa;
+      border-radius: 7px;
+      padding: 7px 9px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .print-btn:hover { background: #dce8ff; }
+
+    .kiosk-print {
+      width: 100%;
+      margin-top: 10px;
+      border: 0;
+      border-radius: 12px;
+      padding: 13px;
+      background: #eaf1ff;
+      color: #1d4ed8;
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .kiosk-print:hover { background: #dce8ff; }
+
+    @media print {
+      body * { visibility: hidden !important; }
+      .print-ticket, .print-ticket * { visibility: visible !important; }
+      .print-ticket {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 72mm;
+        margin: 0;
+        padding: 0;
+        color: #000;
+        background: #fff;
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- ========== PAINEL DO ATENDENTE ========== -->
+  <div class="app" id="appPanel">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">✓</div>
+        <div>
+          <h1>FilaFácil</h1>
+          <p>GESTÃO DE ATENDIMENTO</p>
+        </div>
+      </div>
+
+      <div class="guiche-selector">
+        <label for="guicheSelect">Meu guichê</label>
+        <select id="guicheSelect">
+          <option value="1">Guichê 01</option>
+          <option value="2">Guichê 02</option>
+          <option value="3">Guichê 03</option>
+          <option value="4">Guichê 04</option>
+          <option value="5">Guichê 05</option>
+          <option value="6">Guichê 06</option>
+        </select>
+      </div>
+
+      <nav class="nav" aria-label="Navegação">
+        <button class="active" data-view="inicio"><span>⌂</span>Visão geral</button>
+        <button data-view="novo"><span>＋</span>Nova senha</button>
+        <button data-view="fila"><span>♧</span>Fila de atendimento</button>
+        <button data-view="todos"><span>☷</span>Todas as senhas</button>
+      </nav>
+
+      <div class="side-links">
+        <a href="?view=telao" target="_blank" rel="noopener">🖥 Abrir Telão (TV)</a>
+        <a href="?view=kiosk" target="_blank" rel="noopener">🎫 Abrir Kiosk (cliente)</a>
+      </div>
+
+      <div class="printer-card">
+      <div class="printer-status">
+        <span class="printer-dot"></span>
+        <span>Elgin TM-20 preparada</span>
+      </div>
+      <p class="printer-info">Impressão térmica em 80 mm. O driver da impressora deve estar instalado no Windows.</p>
+      <button class="btn soft" id="testPrinter" type="button" style="width:100%;margin-top:10px;font-size:11px;padding:9px 10px;">🖨️ Testar impressão</button>
+    </div>
+
+    <div class="side-bottom">
+        <div class="online"><span class="dot"></span>Sistema online</div>
+        <div id="dateText"></div>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <button class="mobile" id="mobileMenu" aria-label="Abrir menu">☰</button>
+          Central de operações　/　<strong id="breadcrumb">Visão geral</strong>
+        </div>
+        <div>
+          <span class="avatar">AT</span>
+          <span class="role">Atendente · <strong id="topGuiche">Guichê 01</strong></span>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="heading">
+          <div>
+            <div class="eyebrow">Painel de controle</div>
+            <h2 id="pageTitle">Fila de Atendimento</h2>
+            <p class="subtitle" id="subtitle">Acompanhe as senhas e organize os atendimentos por prioridade.</p>
+          </div>
+          <button class="btn primary" id="newTop"><span>＋</span>Nova senha</button>
+        </section>
+
+        <section class="stats" aria-label="Resumo">
+          <article class="stat">
+            <div class="stat-icon blue">▣</div>
+            <div>
+              <div class="num" id="total">0</div>
+              <div class="label">Total de senhas</div>
+            </div>
+          </article>
+          <article class="stat">
+            <div class="stat-icon green">♙</div>
+            <div>
+              <div class="num" id="waiting">0</div>
+              <div class="label">Na fila</div>
+            </div>
+          </article>
+          <article class="stat">
+            <div class="stat-icon purple">◷</div>
+            <div>
+              <div class="num" id="serving">0</div>
+              <div class="label">Em atendimento</div>
+            </div>
+          </article>
+          <article class="stat">
+            <div class="stat-icon red">✓</div>
+            <div>
+              <div class="num" id="resolved">0</div>
+              <div class="label">Resolvidos</div>
+            </div>
+          </article>
+        </section>
+
+        <!-- Mini telão no painel -->
+        <section class="screen-panel" id="screenPanel" aria-label="Prévia do telão">
+          <div>
+            <div class="screen-label">Senha chamada</div>
+            <div class="screen-current">
+              <div class="screen-number" id="screenCurrent">----</div>
+              <div class="screen-guiche" id="screenCurrentGuiche"></div>
+              <div class="screen-muted" id="screenCurrentStatus">O próximo atendimento aparecerá aqui.</div>
+            </div>
+          </div>
+          <div>
+            <div class="screen-label">Próximas senhas</div>
+            <div class="screen-upcoming" id="screenUpcoming"></div>
+            <div class="screen-muted">As senhas são exibidas de 0001 a 9999.</div>
+          </div>
+        </section>
+
+        <!-- VIEW: Início / Fila -->
+        <section class="workspace view-workspace active" id="viewInicio">
+          <article class="card" id="queueCard">
+            <div class="card-head">
+              <h3>☷　Fila de atendimento</h3>
+              <span class="pill" id="queuePill">0 senhas</span>
+            </div>
+            <div class="tools">
+              <input id="search" type="search" placeholder="Buscar por número..." aria-label="Buscar senha">
+              <select id="filter" aria-label="Filtrar prioridade">
+                <option value="todas">Tipos de atendimento</option>
+                <option value="preferencial">Preferencial</option>
+                <option value="atacado">Atacado</option>
+                <option value="comum">Comum</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Pos.</th>
+                    <th>Senha</th>
+                    <th>Prioridade</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+              </table>
+              <div class="empty" id="empty" hidden>Nenhuma senha na fila.</div>
+            </div>
+          </article>
+
+          <div class="right">
+            <article class="card">
+              <div class="card-head">
+                <h3>🏆　Meu atendimento</h3>
+              </div>
+              <div class="inner">
+                <div class="next" id="nextBox"></div>
+                <div class="actions">
+                  <button class="btn primary" id="callNext" type="button">▶ Chamar próximo</button>
+                  <button class="btn soft" id="soundToggle" type="button" aria-pressed="true">🔊 Som ligado</button>
+                  <button class="btn soft" id="testSound" type="button">🔔 Testar som</button>
+                  <button class="btn soft" id="repeatCall" type="button">↻ Repetir chamada</button>
+                  <button class="btn success" id="resolve" type="button" disabled>✓ Resolver</button>
+                  <button class="btn danger" id="cancelCurrent" type="button" disabled>✕ Cancelar</button>
+                </div>
+                <div class="sound-settings" aria-label="Configurações de áudio">
+                  <label class="sound-option">
+                    <input id="voiceToggle" type="checkbox" checked> Anunciar número da senha por voz
+                  </label>
+                  <label class="sound-option" for="soundVolume">
+                    Volume do alerta <strong id="volumeValue">80%</strong>
+                  </label>
+                  <input id="soundVolume" type="range" min="10" max="100" value="80">
+                  <p class="note">O navegador pode exigir um clique para liberar o som.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="card" id="newCard">
+              <div class="card-head">
+                <h3>＋　Gerar nova senha</h3>
+              </div>
+              <form class="form-body" id="ticketForm">
+                <div class="field">
+                  <label for="priority">Tipo de atendimento</label>
+                  <select id="priority" required>
+                    <option value="comum">Comum</option>
+                    <option value="atacado">Atacado</option>
+                    <option value="preferencial">Preferencial</option>
+                  </select>
+                </div>
+                <button class="btn primary" type="submit">＋　Gerar senha</button>
+                <p class="note">Preferencial tem prioridade de chamada; os demais seguem a ordem definida e a chegada.</p>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <!-- VIEW: Todos -->
+        <section class="view" id="viewTodos">
+          <article class="card">
+            <div class="card-head">
+              <h3>☷　Todas as senhas</h3>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span class="pill" id="allPill">0 senhas</span>
+                <button class="btn soft" id="clearResolved" type="button" style="font-size:11px;padding:8px 12px;">
+                  Limpar resolvidos
+                </button>
+              </div>
+            </div>
+            <div class="tools">
+              <input id="searchAll" type="search" placeholder="Buscar por número..." aria-label="Buscar todas">
+              <select id="filterStatus" aria-label="Filtrar status">
+                <option value="todos">Todos os status</option>
+                <option value="fila">Na fila</option>
+                <option value="atendimento">Em atendimento</option>
+                <option value="resolvido">Resolvidos</option>
+                <option value="cancelado">Cancelados</option>
+              </select>
+              <select id="filterPriorityAll" aria-label="Filtrar prioridade">
+                <option value="todas">Tipos de atendimento</option>
+                <option value="preferencial">Preferencial</option>
+                <option value="atacado">Atacado</option>
+                <option value="comum">Comum</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Senha</th>
+                    <th>Prioridade</th>
+                    <th>Status</th>
+                    <th>Guichê</th>
+                    <th>Horário</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="rowsAll"></tbody>
+              </table>
+              <div class="empty" id="emptyAll" hidden>Nenhuma senha encontrada.</div>
+            </div>
+          </article>
+        </section>
+
+        <!-- VIEW: Nova senha -->
+        <section class="view" id="viewNovo">
+          <div style="max-width:420px;margin:0 auto;">
+            <article class="card">
+              <div class="card-head">
+                <h3>＋　Gerar nova senha</h3>
+              </div>
+              <form class="form-body" id="ticketFormNovo">
+                <div class="field">
+                  <label for="priorityNovo">Tipo de atendimento</label>
+                  <select id="priorityNovo" required>
+                    <option value="comum">Comum</option>
+                    <option value="atacado">Atacado</option>
+                    <option value="preferencial">Preferencial</option>
+                  </select>
+                </div>
+                <button class="btn primary" type="submit">＋　Gerar senha</button>
+                <p class="note">Preferencial tem prioridade de chamada; os demais seguem a ordem definida e a chegada.</p>
+              </form>
+            </article>
+          </div>
+        </section>
+
+        <div class="footer">FilaFácil · Painel de gerenciamento de senhas</div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ========== TELÃO (TV) ========== -->
+  <div class="telao" id="telaoView">
+    <div class="telao-header">
+      <div class="telao-brand">
+        <div class="logo">✓</div>
+        <div>
+          <h1>FilaFácil</h1>
+          <p>PAINEL DE SENHAS</p>
+        </div>
+      </div>
+      <div class="telao-clock" id="telaoClock">--:--</div>
+    </div>
+
+    <div class="telao-main">
+      <div class="telao-current" id="telaoCurrent">
+        <div class="telao-label">Senha chamada</div>
+        <div class="telao-number" id="telaoNumber">----</div>
+        <div class="telao-guiche" id="telaoGuiche"></div>
+        <div class="telao-status" id="telaoStatus">Dirija-se ao guichê indicado</div>
+      </div>
+
+      <div class="telao-side">
+        <div class="telao-box">
+          <h3>Próximas senhas</h3>
+          <div class="telao-next-list" id="telaoNextList">
+            <div class="telao-empty">Nenhuma senha aguardando</div>
+          </div>
+        </div>
+        <div class="telao-box">
+          <h3>Em atendimento agora</h3>
+          <div class="telao-next-list" id="telaoActiveList">
+            <div class="telao-empty">Nenhum atendimento ativo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="telao-footer">FilaFácil · Aguarde ser chamado</div>
+  </div>
+
+  <!-- ========== KIOSK (CLIENTE) ========== -->
+  <div class="kiosk" id="kioskView">
+    <div class="kiosk-brand">
+      <div class="logo">✓</div>
+      <div>
+        <h1>FilaFácil</h1>
+        <p>RETIRE SUA SENHA</p>
+      </div>
+    </div>
+
+    <div class="kiosk-card">
+      <!-- Escolha de prioridade (gera direto) -->
+      <div id="kioskChoose">
+        <h2>Como podemos ajudar?</h2>
+        <p class="sub">Toque na prioridade para gerar sua senha</p>
+        <div class="kiosk-priorities">
+          <button class="kiosk-pri-btn preferencial" data-pri="preferencial">
+            Preferencial
+            <span class="hint">Atendimento prioritário</span>
+          </button>
+          <button class="kiosk-pri-btn comum" data-pri="comum">
+            Comum
+            <span class="hint">Atendimento padrão</span>
+          </button>
+          <button class="kiosk-pri-btn atacado" data-pri="atacado">
+            Atacado
+            <span class="hint">Compras no atacado</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Resultado -->
+      <div class="kiosk-result" id="kioskResult">
+        <div class="kiosk-result-label">Sua senha é</div>
+        <div class="kiosk-result-num" id="kioskNum">----</div>
+        <div class="kiosk-result-pri" id="kioskResultPri"></div>
+        <div class="kiosk-result-msg">Aguarde ser chamado no painel</div>
+        <button class="kiosk-print" id="kioskPrint" type="button">🖨️ Imprimir senha</button>
+        <button class="kiosk-again" id="kioskAgain">Pegar outra senha</button>
+      </div>
+    </div>
+
+    <div class="kiosk-footer">FilaFácil · Toque na tela para começar</div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ========== CONFIG & STATE ==========
+    const KEY = "filafacil_tickets_v5";
+    const OLD_KEYS = ["filafacil_tickets_v4", "filafacil_tickets_v3", "filafacil_tickets_v2", "filafacil_tickets_v1"];
+    const MAX_SENHA = 9999;
+    const weight = { preferencial: 0, atacado: 1, comum: 2 };
+    const labels = { preferencial: "Preferencial", atacado: "Atacado", comum: "Comum" };
+
+    const sample = [
+      { id: 3, priority: "preferencial", status: "fila", time: "14:20", order: 1, senha: 1, guiche: null },
+      { id: 7, priority: "comum", status: "fila", time: "14:25", order: 2, senha: 2, guiche: null },
+      { id: 10, priority: "comum", status: "fila", time: "14:28", order: 3, senha: 3, guiche: null },
+      { id: 5, priority: "atacado", status: "fila", time: "14:31", order: 4, senha: 4, guiche: null },
+      { id: 8, priority: "atacado", status: "fila", time: "14:35", order: 5, senha: 5, guiche: null }
+    ];
+
+    const $ = id => document.getElementById(id);
+
+    const params = new URLSearchParams(window.location.search);
+    const viewMode = params.get("view") || "painel";
+
+    let tickets = carregarTickets();
+    let myGuiche = Number(localStorage.getItem("filafacil_guiche") || 1);
+    let current = null;
+    let toastTimer;
+    let currentView = "inicio";
+
+    function syncCurrent() {
+      const mine = tickets.find(t => t.status === "atendimento" && Number(t.guiche) === myGuiche);
+      current = mine ? mine.id : null;
+    }
+    syncCurrent();
+
+    // ========== DATA ==========
+    function carregarTickets() {
+      try {
+        let salvo = localStorage.getItem(KEY);
+        if (!salvo) {
+          for (const k of OLD_KEYS) {
+            salvo = localStorage.getItem(k);
+            if (salvo) break;
+          }
+        }
+        const dadosBrutos = salvo ? JSON.parse(salvo) : sample.map(t => ({ ...t }));
+        if (!Array.isArray(dadosBrutos)) throw new Error("Formato inválido");
+
+        const dados = dadosBrutos.filter(t => t && typeof t === "object").map(t => ({ ...t }));
+        let proximaSenha = Math.max(0, ...dados.map(t => Number(t.senha) || 0));
+        let proximaOrdem = Math.max(0, ...dados.map(t => Number(t.order) || 0));
+
+        dados.forEach(t => {
+          if (!Number.isInteger(Number(t.senha)) || Number(t.senha) < 1 || Number(t.senha) > MAX_SENHA) {
+            if (proximaSenha < MAX_SENHA) t.senha = ++proximaSenha;
+            else t.senha = null;
+          } else {
+            t.senha = Number(t.senha);
+          }
+          if (!Number.isFinite(Number(t.order))) t.order = ++proximaOrdem;
+          if (t.status === "aberto") t.status = "fila";
+          if (!["fila", "atendimento", "resolvido", "cancelado"].includes(t.status)) t.status = "fila";
+          if (["alta"].includes(t.priority)) t.priority = "preferencial";
+          else if (["baixa"].includes(t.priority)) t.priority = "atacado";
+          else if (["media"].includes(t.priority)) t.priority = "comum";
+          if (!["preferencial", "atacado", "comum"].includes(t.priority)) t.priority = "comum";
+          if (t.guiche === undefined) t.guiche = null;
+          // Remove campos antigos se existirem
+          delete t.title;
+          delete t.description;
+        });
+        return dados;
+      } catch {
+        return sample.map(t => ({ ...t }));
+      }
+    }
+
+    function formatarSenha(ticket) {
+      return ticket && Number.isInteger(Number(ticket.senha))
+        ? String(ticket.senha).padStart(4, "0")
+        : "----";
+    }
+
+    function formatarGuiche(n) {
+      if (!n) return "";
+      return `Guichê ${String(n).padStart(2, "0")}`;
+    }
+
+    function safe(s) {
+      return String(s ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    function queue() {
+      return tickets
+        .filter(t => t.status === "fila")
+        .sort((a, b) =>
+          (weight[a.priority] ?? 99) - (weight[b.priority] ?? 99) ||
+          a.order - b.order || a.id - b.id
+        );
+    }
+
+    function save() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(tickets));
+      } catch {
+        if (viewMode === "painel") toast("Não foi possível salvar os dados.");
+      }
+    }
+
+    function toast(message) {
+      const el = $("toast");
+      if (!el) return;
+      el.textContent = message;
+      el.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove("show"), 2800);
+    }
+
+    // ========== RENDER PAINEL ==========
+    function render() {
+      if (viewMode !== "painel") return;
+
+      const q = queue();
+      const active = tickets.filter(t => t.status === "atendimento");
+      const done = tickets.filter(t => t.status === "resolvido");
+
+      $("total").textContent = tickets.length;
+      $("waiting").textContent = q.length;
+      $("serving").textContent = active.length;
+      $("resolved").textContent = done.length;
+      $("queuePill").textContent = `${q.length} ${q.length === 1 ? "senha" : "senhas"}`;
+      $("allPill").textContent = `${tickets.length} senhas`;
+
+      const term = $("search").value.trim().toLowerCase();
+      const filter = $("filter").value;
+      const visible = q.filter(t =>
+        formatarSenha(t).includes(term) &&
+        (filter === "todas" || t.priority === filter)
+      );
+
+      $("rows").innerHTML = visible.map((t, i) => `
+        <tr>
+          <td><span class="pos ${safe(t.priority)}">${i + 1}</span></td>
+          <td><span class="id">${formatarSenha(t)}</span></td>
+          <td><span class="priority ${safe(t.priority)}">${labels[t.priority] || "Média"}</span></td>
+          <td><span class="status">Na fila</span></td>
+          <td>
+            <div class="row-actions">
+              <button class="row-action" data-call="${t.id}">➜ Chamar</button>
+              <button class="row-action danger" data-cancel="${t.id}">✕</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+      $("empty").hidden = visible.length > 0;
+
+      syncCurrent();
+      const now = tickets.find(t => t.id === current && t.status === "atendimento");
+      const next = q[0];
+      const display = now || next;
+
+      $("nextBox").innerHTML = display
+        ? `<div class="next-num" style="${now ? "background:var(--blue)" : ""}">${formatarSenha(display)}</div>
+           <div class="next-info">
+             <strong>${now ? "Em atendimento" : "Próxima senha"}</strong>
+             <p>${now ? formatarGuiche(myGuiche) : "Aguardando chamada"}</p>
+           </div>
+           <span class="priority ${safe(display.priority)}">${labels[display.priority] || "Média"}</span>`
+        : `<div class="next-num" style="background:#91a0b8">—</div>
+           <div class="next-info"><strong>Fila vazia</strong><p>Gere uma senha ou aguarde o kiosk.</p></div>`;
+
+      const lastCalled = tickets
+        .filter(t => t.status === "atendimento")
+        .sort((a, b) => (b.calledAt || 0) - (a.calledAt || 0))[0];
+
+      if (lastCalled) {
+        $("screenCurrent").textContent = formatarSenha(lastCalled);
+        $("screenCurrentGuiche").textContent = formatarGuiche(lastCalled.guiche);
+        $("screenCurrentStatus").textContent = "Dirija-se ao atendimento.";
+      } else {
+        $("screenCurrent").textContent = "----";
+        $("screenCurrentGuiche").textContent = "";
+        $("screenCurrentStatus").textContent = "Nenhuma senha está sendo atendida.";
+      }
+
+      const upcoming = q.slice(0, 3);
+      $("screenUpcoming").innerHTML = upcoming.length
+        ? upcoming.map(t => `<div class="screen-upcoming-item">${formatarSenha(t)}</div>`).join("")
+        : '<div class="screen-empty">Nenhuma senha aguardando.</div>';
+
+      $("callNext").disabled = !next || !!now;
+      $("callNext").style.opacity = (!next || !!now) ? ".55" : "1";
+      $("resolve").disabled = !now;
+      $("resolve").style.opacity = now ? "1" : ".55";
+      $("cancelCurrent").disabled = !now;
+      $("cancelCurrent").style.opacity = now ? "1" : ".55";
+
+      renderAllTable();
+      save();
+    }
+
+    function renderAllTable() {
+      if (viewMode !== "painel") return;
+      const term = $("searchAll").value.trim().toLowerCase();
+      const statusFilter = $("filterStatus").value;
+      const priorityFilter = $("filterPriorityAll").value;
+
+      const list = tickets
+        .filter(t => {
+          const matchTerm = formatarSenha(t).includes(term);
+          const matchStatus = statusFilter === "todos" || t.status === statusFilter;
+          const matchPriority = priorityFilter === "todas" || t.priority === priorityFilter;
+          return matchTerm && matchStatus && matchPriority;
+        })
+        .sort((a, b) => b.order - a.order);
+
+      const statusLabel = {
+        fila: "Na fila",
+        atendimento: "Em atendimento",
+        resolvido: "Resolvido",
+        cancelado: "Cancelado"
+      };
+
+      $("rowsAll").innerHTML = list.map(t => {
+        let actions = "";
+        if (t.status === "fila") {
+          actions = `
+            <button class="row-action" data-call="${t.id}">➜ Chamar</button>
+            <button class="print-btn" data-print="${t.id}" title="Imprimir senha na Elgin TM-20">🖨️</button>
+            <button class="row-action danger" data-cancel="${t.id}">✕</button>`;
+        } else if (t.status === "atendimento") {
+          actions = `
+            <button class="row-action success" data-resolve="${t.id}">✓ Resolver</button>
+            <button class="row-action" data-requeue="${t.id}">↩ Fila</button>
+            <button class="print-btn" data-print="${t.id}" title="Imprimir senha na Elgin TM-20">🖨️</button>
+            <button class="row-action danger" data-cancel="${t.id}">✕</button>`;
+        } else {
+          actions = `
+            <button class="row-action" data-requeue="${t.id}">↩ Reabrir</button>
+            <button class="print-btn" data-print="${t.id}" title="Imprimir senha na Elgin TM-20">🖨️</button>`;
+        }
+
+        return `
+          <tr>
+            <td><span class="id">${formatarSenha(t)}</span></td>
+            <td><span class="priority ${safe(t.priority)}">${labels[t.priority] || "Média"}</span></td>
+            <td><span class="status ${safe(t.status)}">${statusLabel[t.status] || t.status}</span></td>
+            <td>${t.guiche ? `<span class="guiche-badge">${formatarGuiche(t.guiche)}</span>` : "—"}</td>
+            <td>${safe(t.time || "—")}</td>
+            <td><div class="row-actions">${actions}</div></td>
+          </tr>`;
+      }).join("");
+
+      $("emptyAll").hidden = list.length > 0;
+    }
+
+    // ========== RENDER TELÃO ==========
+    function renderTelao() {
+      if (viewMode !== "telao") return;
+
+      const q = queue();
+      const active = tickets
+        .filter(t => t.status === "atendimento")
+        .sort((a, b) => (b.calledAt || 0) - (a.calledAt || 0));
+
+      const last = active[0];
+      const numEl = $("telaoNumber");
+      const curEl = $("telaoCurrent");
+
+      if (last) {
+        const prevNum = numEl.textContent;
+        const newNum = formatarSenha(last);
+        numEl.textContent = newNum;
+        $("telaoGuiche").textContent = formatarGuiche(last.guiche);
+        $("telaoStatus").textContent = "Dirija-se ao guichê indicado";
+
+        if (prevNum !== newNum && prevNum !== "----") {
+          curEl.classList.remove("called");
+          numEl.classList.remove("called-number");
+          void curEl.offsetWidth;
+          curEl.classList.add("called");
+          numEl.classList.add("called-number");
+        }
+      } else {
+        numEl.textContent = "----";
+        $("telaoGuiche").textContent = "";
+        $("telaoStatus").textContent = "Aguarde ser chamado";
+      }
+
+      const nextList = $("telaoNextList");
+      if (q.length === 0) {
+        nextList.innerHTML = '<div class="telao-empty">Nenhuma senha aguardando</div>';
+      } else {
+        nextList.innerHTML = q.slice(0, 5).map(t => `
+          <div class="telao-next-item">
+            <span class="telao-next-num">${formatarSenha(t)}</span>
+            <span class="telao-next-pri ${safe(t.priority)}">${labels[t.priority] || "Média"}</span>
+          </div>
+        `).join("");
+      }
+
+      const activeList = $("telaoActiveList");
+      if (active.length === 0) {
+        activeList.innerHTML = '<div class="telao-empty">Nenhum atendimento ativo</div>';
+      } else {
+        activeList.innerHTML = active.map(t => `
+          <div class="telao-next-item">
+            <span class="telao-next-num">${formatarSenha(t)}</span>
+            <span style="color:#7dd3fc;font-weight:700;font-size:14px;">${formatarGuiche(t.guiche)}</span>
+          </div>
+        `).join("");
+      }
+
+      $("telaoClock").textContent = new Intl.DateTimeFormat("pt-BR", {
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
+      }).format(new Date());
+    }
+
+    // ========== SOM ==========
+    let somAtivo = localStorage.getItem("filafacil_som") !== "off";
+    let audioContext = null;
+    let volumeSom = Number(localStorage.getItem("filafacil_volume") || 80) / 100;
+    let vozAtiva = localStorage.getItem("filafacil_voz") !== "off";
+
+    function atualizarBotaoSom() {
+      if (viewMode !== "painel") return;
+      const botao = $("soundToggle");
+      if (!botao) return;
+      botao.textContent = somAtivo ? "🔊 Som ligado" : "🔇 Som desligado";
+      botao.setAttribute("aria-pressed", String(somAtivo));
+      $("soundVolume").value = Math.round(volumeSom * 100);
+      $("volumeValue").textContent = `${Math.round(volumeSom * 100)}%`;
+      $("voiceToggle").checked = vozAtiva;
+    }
+
+    function tocarTom(ctx, frequencia, inicio, duracao, ganho, tipo = "sine") {
+      const oscilador = ctx.createOscillator();
+      const envelope = ctx.createGain();
+      oscilador.type = tipo;
+      oscilador.frequency.setValueAtTime(frequencia, inicio);
+      envelope.gain.setValueAtTime(0.0001, inicio);
+      envelope.gain.exponentialRampToValueAtTime(Math.max(0.001, ganho), inicio + 0.025);
+      envelope.gain.exponentialRampToValueAtTime(0.0001, inicio + duracao);
+      oscilador.connect(envelope);
+      envelope.connect(ctx.destination);
+      oscilador.start(inicio);
+      oscilador.stop(inicio + duracao + 0.03);
+    }
+
+    function falarSenha(ticket, demonstracao = false) {
+      if (!vozAtiva || !("speechSynthesis" in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        let texto;
+        if (demonstracao || !ticket) {
+          texto = "Atenção, chamada de senha. Dirija-se ao atendimento.";
+        } else {
+          const g = ticket.guiche ? ` guichê ${ticket.guiche}` : "";
+          texto = `Atenção. Senha ${String(ticket.senha).split("").join(" ")}. Dirija-se ao${g}.`;
+        }
+        const fala = new SpeechSynthesisUtterance(texto);
+        fala.lang = "pt-BR";
+        fala.rate = 0.88;
+        fala.pitch = 1.0;
+        fala.volume = Math.max(0.1, Math.min(1, volumeSom));
+        const vozes = window.speechSynthesis.getVoices();
+        const vozPt = vozes.find(v => v.lang && v.lang.toLowerCase().startsWith("pt-br"))
+          || vozes.find(v => v.lang && v.lang.toLowerCase().startsWith("pt"));
+        if (vozPt) fala.voice = vozPt;
+        window.speechSynthesis.speak(fala);
+      } catch (erro) {
+        console.warn("Voz indisponível", erro);
+      }
+    }
+
+    function tocarSomChamada(ticket = null, demonstracao = false) {
+      if (!somAtivo && viewMode === "painel") return;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioContext = audioContext || new AudioContextClass();
+          const tocar = () => {
+            const ctx = audioContext;
+            const agora = ctx.currentTime + 0.04;
+            const base = 0.22 * (viewMode === "telao" ? 0.9 : volumeSom);
+            const notas = [
+              { f: 660, t: 0.00, d: 0.25 },
+              { f: 880, t: 0.24, d: 0.28 },
+              { f: 1175, t: 0.52, d: 0.42 }
+            ];
+            notas.forEach(n => {
+              tocarTom(ctx, n.f, agora + n.t, n.d, base, "triangle");
+              tocarTom(ctx, n.f * 2, agora + n.t, n.d * 0.65, base * 0.22, "sine");
+            });
+            if (vozAtiva || viewMode === "telao") {
+              window.setTimeout(() => falarSenha(ticket, demonstracao), 780);
+            }
+          };
+          if (audioContext.state === "suspended") {
+            audioContext.resume().then(tocar).catch(() => {});
+          } else {
+            tocar();
+          }
+        } else {
+          falarSenha(ticket, demonstracao);
+        }
+      } catch (erro) {
+        falarSenha(ticket, demonstracao);
+      }
+    }
+
+    function destacarTelãoMini() {
+      if (viewMode !== "painel") return;
+      const painel = document.querySelector(".screen-current");
+      const numero = $("screenCurrent");
+      if (!painel || !numero) return;
+      painel.classList.remove("called");
+      numero.classList.remove("called-number");
+      void painel.offsetWidth;
+      painel.classList.add("called");
+      numero.classList.add("called-number");
+    }
+
+    // ========== AÇÕES ==========
+    function call(id = null) {
+      if (tickets.some(t => t.status === "atendimento" && Number(t.guiche) === myGuiche)) {
+        toast("Resolva ou cancele a senha atual do seu guichê antes de chamar outra.");
+        return;
+      }
+
+      const ticket = id
+        ? tickets.find(t => t.id === Number(id) && t.status === "fila")
+        : queue()[0];
+
+      if (!ticket) {
+        toast("Não há senhas aguardando atendimento.");
+        return;
+      }
+
+      ticket.status = "atendimento";
+      ticket.guiche = myGuiche;
+      ticket.calledAt = Date.now();
+      current = ticket.id;
+      render();
+      destacarTelãoMini();
+      tocarSomChamada(ticket);
+      toast(`Senha ${formatarSenha(ticket)} chamada no ${formatarGuiche(myGuiche)}.`);
+    }
+
+    function resolveTicket(id = null) {
+      const ticket = id
+        ? tickets.find(t => t.id === Number(id))
+        : tickets.find(t => t.id === current && t.status === "atendimento");
+
+      if (!ticket || ticket.status !== "atendimento") {
+        toast("Não há senha em atendimento para resolver.");
+        return;
+      }
+
+      ticket.status = "resolvido";
+      if (ticket.id === current) current = null;
+      render();
+      toast(`Senha ${formatarSenha(ticket)} resolvida.`);
+    }
+
+    function cancelTicket(id) {
+      const ticket = tickets.find(t => t.id === Number(id));
+      if (!ticket) return;
+      if (ticket.status === "resolvido") {
+        toast("Esta senha já está resolvida.");
+        return;
+      }
+      ticket.status = "cancelado";
+      ticket.guiche = null;
+      if (ticket.id === current) current = null;
+      render();
+      toast(`Senha ${formatarSenha(ticket)} cancelada.`);
+    }
+
+    function requeueTicket(id) {
+      const ticket = tickets.find(t => t.id === Number(id));
+      if (!ticket) return;
+      ticket.status = "fila";
+      ticket.guiche = null;
+      ticket.calledAt = null;
+      if (ticket.id === current) current = null;
+      render();
+      toast(`Senha ${formatarSenha(ticket)} devolvida à fila.`);
+    }
+
+    // ========== IMPRESSORA ELGIN TM-20 ==========
+    const IMPRESSORA = {
+      nome: "Elgin TM-20",
+      largura: "80mm"
+    };
+
+    function escaparImpressao(valor) {
+      return String(valor ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function imprimirSenha(ticket) {
+      if (!ticket) {
+        toast("Senha não encontrada para impressão.");
+        return;
+      }
+
+      const janela = window.open("", "_blank", "width=420,height=650");
+      if (!janela) {
+        toast("Permita pop-ups para imprimir a senha.");
+        return;
+      }
+
+      const numero = escaparImpressao(formatarSenha(ticket));
+      const tipo = escaparImpressao(labels[ticket.priority] || "Comum");
+      const horario = escaparImpressao(ticket.time || new Intl.DateTimeFormat("pt-BR", {
+        hour: "2-digit", minute: "2-digit"
+      }).format(new Date()));
+
+      janela.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>${numero} - ${escaparImpressao(IMPRESSORA.nome)}</title>
+<style>
+@page { size: 80mm auto; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; }
+body { width: 80mm; font-family: Arial, sans-serif; color: #000; text-align: center; }
+.ticket { width: 72mm; margin: 0 auto; padding: 5mm 0 7mm; }
+.brand { font-size: 17px; font-weight: 900; letter-spacing: .5px; }
+.subtitle { margin-top: 2mm; font-size: 9px; font-weight: 700; letter-spacing: 1.4px; }
+.line { border-top: 1px dashed #000; margin: 4mm 0; }
+.label { font-size: 11px; font-weight: 700; }
+.number { margin: 2mm 0; font-size: 38px; line-height: 1; font-weight: 900; letter-spacing: 2px; }
+.type { font-size: 16px; font-weight: 900; }
+.time { margin-top: 3mm; font-size: 10px; }
+.footer { margin-top: 5mm; font-size: 9px; }
+</style>
+</head>
+<body>
+  <main class="ticket">
+    <div class="brand">FilaFácil</div>
+    <div class="subtitle">SENHA DE ATENDIMENTO</div>
+    <div class="line"></div>
+    <div class="label">SUA SENHA</div>
+    <div class="number">${numero}</div>
+    <div class="type">${tipo}</div>
+    <div class="time">Emitida às ${horario}</div>
+    <div class="line"></div>
+    <div class="footer">Aguarde sua chamada no painel.</div>
+  </main>
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => { window.print(); }, 250);
+});
+window.addEventListener('afterprint', () => {
+  setTimeout(() => window.close(), 150);
+});
+<\/script>
+</body>
+</html>`);
+      janela.document.close();
+    }
+
+    function testarImpressora() {
+      const teste = { senha: "0001", priority: "comum", time: new Intl.DateTimeFormat("pt-BR", {
+        hour: "2-digit", minute: "2-digit"
+      }).format(new Date()) };
+      imprimirSenha(teste);
+      toast(`Teste preparado para ${IMPRESSORA.nome}.`);
+    }
+
+    function criarTicket(priority, formEl) {
+      if (!Object.prototype.hasOwnProperty.call(weight, priority)) {
+        priority = "comum";
+      }
+
+      const usadas = new Set(tickets.map(t => Number(t.senha)).filter(n => n >= 1 && n <= MAX_SENHA));
+      let senha = 1;
+      while (senha <= MAX_SENHA && usadas.has(senha)) senha++;
+
+      if (senha > MAX_SENHA) {
+        if (viewMode === "painel") toast("Todas as senhas de 0001 a 9999 já foram utilizadas.");
+        return null;
+      }
+
+      const id = tickets.reduce((max, t) => Math.max(max, Number(t.id) || 0), 0) + 1;
+      const order = tickets.reduce((max, t) => Math.max(max, Number(t.order) || 0), 0) + 1;
+      const time = new Intl.DateTimeFormat("pt-BR", {
+        hour: "2-digit", minute: "2-digit"
+      }).format(new Date());
+
+      const novo = {
+        id, senha, priority,
+        status: "fila", time, order, guiche: null, calledAt: null
+      };
+
+      tickets.push(novo);
+      if (formEl) formEl.reset();
+      if (viewMode === "painel") {
+        $("filter").value = "todas";
+        $("search").value = "";
+        render();
+        toast(`Senha ${formatarSenha(novo)} gerada com sucesso.`);
+      } else {
+        save();
+      }
+      return novo;
+    }
+
+    // ========== KIOSK ==========
+    function initKiosk() {
+      document.body.classList.add("mode-kiosk");
+      document.title = "FilaFácil · Retire sua senha";
+
+      const choose = $("kioskChoose");
+      const result = $("kioskResult");
+
+      document.querySelectorAll(".kiosk-pri-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const priority = btn.dataset.pri;
+          const novo = criarTicket(priority, null);
+          if (!novo) return;
+
+          choose.style.display = "none";
+          result.classList.add("show");
+          $("kioskNum").textContent = formatarSenha(novo);
+          const priEl = $("kioskResultPri");
+          priEl.textContent = labels[novo.priority];
+          priEl.className = "kiosk-result-pri " + novo.priority;
+          $("kioskPrint").onclick = () => imprimirSenha(novo);
+        });
+      });
+
+      $("kioskAgain").addEventListener("click", () => {
+        result.classList.remove("show");
+        choose.style.display = "";
+      });
+    }
+
+    // ========== TELÃO ==========
+    function initTelao() {
+      document.body.classList.add("mode-telao");
+      document.title = "FilaFácil · Telão de Senhas";
+      renderTelao();
+
+      setInterval(() => {
+        tickets = carregarTickets();
+        renderTelao();
+      }, 1000);
+
+      window.addEventListener("storage", e => {
+        if (e.key === KEY) {
+          tickets = carregarTickets();
+          renderTelao();
+        }
+      });
+
+      document.body.addEventListener("click", () => {
+        if (audioContext && audioContext.state === "suspended") {
+          audioContext.resume();
+        }
+      }, { once: true });
+    }
+
+    // ========== PAINEL ==========
+    function initPainel() {
+      $("guicheSelect").value = String(myGuiche);
+      const testPrinter = $("testPrinter");
+      if (testPrinter) testPrinter.addEventListener("click", testarImpressora);
+      $("topGuiche").textContent = formatarGuiche(myGuiche);
+
+      $("guicheSelect").addEventListener("change", e => {
+        myGuiche = Number(e.target.value);
+        localStorage.setItem("filafacil_guiche", String(myGuiche));
+        $("topGuiche").textContent = formatarGuiche(myGuiche);
+        syncCurrent();
+        render();
+        toast(`Você está no ${formatarGuiche(myGuiche)}.`);
+      });
+
+      $("ticketForm").addEventListener("submit", e => {
+        e.preventDefault();
+        criarTicket($("priority").value, e.target);
+      });
+
+      $("ticketFormNovo").addEventListener("submit", e => {
+        e.preventDefault();
+        const ok = criarTicket($("priorityNovo").value, e.target);
+        if (ok) setTimeout(() => switchView("inicio"), 600);
+      });
+
+      $("callNext").addEventListener("click", () => call());
+      $("resolve").addEventListener("click", () => resolveTicket());
+      $("cancelCurrent").addEventListener("click", () => {
+        if (current) cancelTicket(current);
+      });
+
+      $("soundToggle").addEventListener("click", () => {
+        somAtivo = !somAtivo;
+        localStorage.setItem("filafacil_som", somAtivo ? "on" : "off");
+        atualizarBotaoSom();
+        if (somAtivo) tocarSomChamada(null, true);
+        else if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+        toast(somAtivo ? "Som de chamada ativado." : "Som de chamada desativado.");
+      });
+
+      $("testSound").addEventListener("click", () => {
+        if (!somAtivo) {
+          somAtivo = true;
+          localStorage.setItem("filafacil_som", "on");
+          atualizarBotaoSom();
+        }
+        tocarSomChamada(null, true);
+        toast("Teste de áudio iniciado.");
+      });
+
+      $("repeatCall").addEventListener("click", () => {
+        const ticket = tickets.find(t => t.id === current && t.status === "atendimento");
+        if (!ticket) {
+          toast("Não há senha atual para repetir.");
+          return;
+        }
+        tocarSomChamada(ticket);
+        destacarTelãoMini();
+        toast(`Repetindo chamada da senha ${formatarSenha(ticket)}.`);
+      });
+
+      $("soundVolume").addEventListener("input", e => {
+        volumeSom = Number(e.target.value) / 100;
+        localStorage.setItem("filafacil_volume", String(Math.round(volumeSom * 100)));
+        $("volumeValue").textContent = `${Math.round(volumeSom * 100)}%`;
+      });
+
+      $("voiceToggle").addEventListener("change", e => {
+        vozAtiva = e.target.checked;
+        localStorage.setItem("filafacil_voz", vozAtiva ? "on" : "off");
+        if (!vozAtiva && "speechSynthesis" in window) window.speechSynthesis.cancel();
+        toast(vozAtiva ? "Anúncio por voz ativado." : "Anúncio por voz desativado.");
+      });
+
+      $("clearResolved").addEventListener("click", () => {
+        const qtd = tickets.filter(t => t.status === "resolvido" || t.status === "cancelado").length;
+        if (qtd === 0) {
+          toast("Não há senhas resolvidas ou canceladas para limpar.");
+          return;
+        }
+        if (!confirm(`Remover ${qtd} senha(s) resolvidas/canceladas?`)) return;
+        tickets = tickets.filter(t => t.status === "fila" || t.status === "atendimento");
+        render();
+        toast(`${qtd} senha(s) removidas.`);
+      });
+
+      $("rows").addEventListener("click", e => {
+        const callBtn = e.target.closest("[data-call]");
+        const cancelBtn = e.target.closest("[data-cancel]");
+        if (callBtn) call(callBtn.dataset.call);
+        if (cancelBtn) cancelTicket(cancelBtn.dataset.cancel);
+      });
+
+      $("rowsAll").addEventListener("click", e => {
+        const callBtn = e.target.closest("[data-call]");
+        const cancelBtn = e.target.closest("[data-cancel]");
+        const resolveBtn = e.target.closest("[data-resolve]");
+        const requeueBtn = e.target.closest("[data-requeue]");
+        if (callBtn) call(callBtn.dataset.call);
+        if (cancelBtn) cancelTicket(cancelBtn.dataset.cancel);
+        if (resolveBtn) resolveTicket(resolveBtn.dataset.resolve);
+        if (requeueBtn) requeueTicket(requeueBtn.dataset.requeue);
+        const printBtn = e.target.closest("[data-print]");
+        if (printBtn) {
+          const ticket = tickets.find(t => t.id === Number(printBtn.dataset.print));
+          imprimirSenha(ticket);
+        }
+      });
+
+      $("search").addEventListener("input", render);
+      $("filter").addEventListener("change", render);
+      $("searchAll").addEventListener("input", renderAllTable);
+      $("filterStatus").addEventListener("change", renderAllTable);
+      $("filterPriorityAll").addEventListener("change", renderAllTable);
+
+      $("newTop").addEventListener("click", () => switchView("novo"));
+      $("mobileMenu").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+
+      const navTitles = {
+        inicio: ["Visão geral", "Fila de Atendimento", "Acompanhe as senhas e organize os atendimentos por prioridade."],
+        novo: ["Nova senha", "Gerar nova senha", "Escolha a prioridade e gere uma senha de atendimento."],
+        fila: ["Fila de atendimento", "Fila de Atendimento", "Senhas aguardando atendimento, ordenadas por prioridade e chegada."],
+        todos: ["Todas as senhas", "Todas as Senhas", "Resumo de senhas na fila, em atendimento, resolvidas e canceladas."]
+      };
+
+      function switchView(view) {
+        currentView = view;
+        document.querySelectorAll(".nav button").forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.view === view);
+        });
+        $("sidebar").classList.remove("open");
+
+        const [crumb, title, subtitle] = navTitles[view];
+        $("breadcrumb").textContent = crumb;
+        $("pageTitle").textContent = title;
+        $("subtitle").textContent = subtitle;
+
+        const viewInicio = $("viewInicio");
+        const viewTodos = $("viewTodos");
+        const viewNovo = $("viewNovo");
+        const screenPanel = $("screenPanel");
+
+        viewInicio.classList.remove("active");
+        viewTodos.classList.remove("active");
+        viewNovo.classList.remove("active");
+
+        if (view === "inicio" || view === "fila") {
+          viewInicio.classList.add("active");
+          screenPanel.style.display = "";
+        } else if (view === "todos") {
+          viewTodos.classList.add("active");
+          screenPanel.style.display = "none";
+          renderAllTable();
+        } else if (view === "novo") {
+          viewNovo.classList.add("active");
+          screenPanel.style.display = "none";
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      document.querySelectorAll(".nav button").forEach(button => {
+        button.addEventListener("click", () => switchView(button.dataset.view));
+      });
+
+      $("dateText").textContent = new Intl.DateTimeFormat("pt-BR", {
+        weekday: "short", day: "2-digit", month: "short", year: "numeric"
+      }).format(new Date());
+
+      atualizarBotaoSom();
+      render();
+
+      window.addEventListener("storage", event => {
+        if (event.key === KEY) {
+          tickets = carregarTickets();
+          syncCurrent();
+          render();
+        }
+      });
+    }
+
+    // ========== BOOT ==========
+    if (viewMode === "telao") {
+      initTelao();
+    } else if (viewMode === "kiosk") {
+      initKiosk();
+    } else {
+      initPainel();
+    }
+  </script>
+</body>
+</html>
